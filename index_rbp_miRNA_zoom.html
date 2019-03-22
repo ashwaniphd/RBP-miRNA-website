@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <style>
+    body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
+  </style>
+</head>
+
+<body>
+  <script>
+    
+var svg = d3.select("body")
+      .append("svg")
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .call(d3.zoom().on("zoom", function () {
+              svg.attr("transform", d3.event.transform)
+
+      }))
+
+      .append("g")
+
+var lineData = [
+         {"x": 0, "y": 100},
+         {"x": 1000, "y":100 },
+         {"x": 1001, "y": 100},
+                  { "x": 1022,  "y": 100}, { "x": 1023,  "y":100},{ "x": 1048,  "y": 100},{ "x": 1049,  "y": 100},{ "x": 1070,  "y":100},{ "x": 1071,  "y": 100},{ "x": 2070,  "y": 100},
+                  
+               ];
+
+var data = [4, 4, 4, 4, 4, 4,4, 4, 4, 4, 4, 4,4, 4, 4, 4, 4, 4, 4,4];
+
+var data1 = ['Acin1','AGO2','AGO3','CPSF2','CPSF6','CPSF7','CSTF2','EIF4A3','ELAVL1','FIP1L1','FMR1','FUS','HNRNPA2B1','HNRNPH1','HNRNPL','IGF2BP2','m6A','MSI2','NUDT21','RNPS1'];
+
+var circles = svg.selectAll("circle")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("cx", function(d, i){
+         var randomnumber = Math.floor(Math.random() * (1022 - 1001 + 1)) + 1001;
+            return randomnumber;
+        })
+      .attr("cy", function(d, i){
+         var randomnumber = Math.floor(Math.random() * (107 - 91 + 1)) + 91;
+            return randomnumber;
+        })
+
+        .attr("r", function(d){
+            return d;
+        })
+
+        .attr("fill", function(d, i){
+         var randomcolor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);;
+            return randomcolor;
+        })
+
+    
+    .on("mouseover", function(d,i){ tooltip.text(data1[i]); return tooltip.style("visibility", "visible");})
+    .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+    .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
+     .on("zoom");
+
+
+
+var tooltip = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .text("RBP");
+
+
+lineData = lineData.map(function (point, index, arr) {
+    var next = arr[index + 1],
+        prev = arr[index - 1];
+    return {
+        x: point.x,
+        y: point.y,
+        x1: point.x,
+        y1: point.y,
+        x2: (next) ? next.x : prev.x,
+        y2: (next) ? next.y : prev.y
+    };
+});
+
+
+var lines = svg.selectAll("line")
+        .data(lineData)
+        .enter()
+        .append("line")
+        .attr('x1', function(d) { return d.x1; })
+        .attr('y1', function(d) { return d.y1; })
+        .attr('x2', function(d) { return d.x2; })
+        .attr('y2', function(d) { return d.y2; })
+        .attr("stroke", function (d) {
+            if (d.x>0 && d.x <=1000) {
+                return 'blue';
+            }
+            else if(d.x>1000 && d.x <=1022){
+                return 'red';
+            }
+            else if(d.x>1022 && d.x <=1048){
+                return 'yellow';
+            }
+            else if(d.x>1048 && d.x <=1070){
+                return 'red';
+            }
+            else {
+                return 'blue';
+            }
+        })
+        .attr("fill", "none")
+        .attr("stroke-width", 2);
+        
+
+
+  </script>
+</body>
+
